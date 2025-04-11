@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styles -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+  
+  <!-- States -->
+  <g stroke="black" stroke-width="2" fill="#e6f3ff">
+    <!-- IDLE state -->
+    <circle cx="400" cy="100" r="40"/>
+    <text x="400" y="100" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">IDLE</text>
+    <text x="400" y="115" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=0, inner=0</text>
+    
+    <!-- ENTER_OUTER state -->
+    <circle cx="200" cy="200" r="40"/>
+    <text x="200" y="195" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">ENTER</text>
+    <text x="200" y="210" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">OUTER</text>
+    <text x="200" y="225" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=1, inner=0</text>
+    
+    <!-- ENTER_BOTH state -->
+    <circle cx="200" cy="350" r="40"/>
+    <text x="200" y="345" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">ENTER</text>
+    <text x="200" y="360" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">BOTH</text>
+    <text x="200" y="375" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=1, inner=1</text>
+    
+    <!-- ENTER_INNER state -->
+    <circle cx="200" cy="500" r="40"/>
+    <text x="200" y="495" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">ENTER</text>
+    <text x="200" y="510" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">INNER</text>
+    <text x="200" y="525" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=0, inner=1</text>
+    
+    <!-- EXIT_INNER state -->
+    <circle cx="600" cy="200" r="40"/>
+    <text x="600" y="195" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">EXIT</text>
+    <text x="600" y="210" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">INNER</text>
+    <text x="600" y="225" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=0, inner=1</text>
+    
+    <!-- EXIT_BOTH state -->
+    <circle cx="600" cy="350" r="40"/>
+    <text x="600" y="345" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">EXIT</text>
+    <text x="600" y="360" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">BOTH</text>
+    <text x="600" y="375" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=1, inner=1</text>
+    
+    <!-- EXIT_OUTER state -->
+    <circle cx="600" cy="500" r="40"/>
+    <text x="600" y="495" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">EXIT</text>
+    <text x="600" y="510" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="14" font-weight="bold">OUTER</text>
+    <text x="600" y="525" text-anchor="middle" alignment-baseline="middle" font-family="Arial" font-size="10">outer=1, inner=0</text>
+  </g>
+  
+  <!-- Transitions -->
+  <g stroke="black" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)">
+    <!-- IDLE to ENTER_OUTER -->
+    <path d="M 370 120 Q 300 120 250 180"/>
+    <text x="290" y="135" font-family="Arial" font-size="10" fill="black">outer=1, inner=0 / enter=0, exit=0</text>
+    
+    <!-- IDLE to EXIT_INNER -->
+    <path d="M 430 120 Q 500 120 550 180"/>
+    <text x="510" y="135" font-family="Arial" font-size="10" fill="black">outer=0, inner=1 / enter=0, exit=0</text>
+    
+    <!-- ENTER_OUTER to IDLE -->
+    <path d="M 230 175 Q 320 145 370 100"/>
+    <text x="280" y="160" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- ENTER_OUTER to ENTER_BOTH -->
+    <path d="M 200 240 L 200 310"/>
+    <text x="210" y="275" font-family="Arial" font-size="10" fill="black">outer=1, inner=1 / enter=0, exit=0</text>
+
+    <!-- ENTER_OUTER to ENTER_INNER -->
+    <path d="M 170 230 Q 100 350 170 470"/>
+    <text x="65" y="350" font-family="Arial" font-size="10" fill="black">outer=0, inner=1 / enter=0, exit=0</text>
+    
+    <!-- ENTER_BOTH to ENTER_INNER -->
+    <path d="M 200 390 L 200 460"/>
+    <text x="210" y="425" font-family="Arial" font-size="10" fill="black">outer=0, inner=1 / enter=1, exit=0</text>
+    
+    <!-- ENTER_INNER to IDLE -->
+    <path d="M 230 480 Q 350 400 390 140"/>
+    <text x="330" y="430" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- EXIT_INNER to IDLE -->
+    <path d="M 570 180 Q 450 145 440 100"/>
+    <text x="490" y="160" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- EXIT_INNER to EXIT_BOTH -->
+    <path d="M 600 240 L 600 310"/>
+    <text x="610" y="275" font-family="Arial" font-size="10" fill="black">outer=1, inner=1 / enter=0, exit=0</text>
+
+    <!-- EXIT_INNER to EXIT_OUTER -->
+    <path d="M 570 230 Q 500 350 570 470"/>
+    <text x="490" y="350" font-family="Arial" font-size="10" fill="black">outer=1, inner=0 / enter=0, exit=0</text>
+    
+    <!-- EXIT_BOTH to EXIT_OUTER -->
+    <path d="M 600 390 L 600 460"/>
+    <text x="610" y="425" font-family="Arial" font-size="10" fill="black">outer=1, inner=0 / enter=0, exit=1</text>
+    
+    <!-- EXIT_OUTER to IDLE -->
+    <path d="M 570 480 Q 450 400 420 140"/>
+    <text x="470" y="430" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- Self-loops -->
+    <!-- IDLE self-loop -->
+    <path d="M 440 100 Q 470 60 440 60 Q 410 60 440 100"/>
+    <text x="465" y="60" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- ENTER_OUTER self-loop -->
+    <path d="M 240 200 Q 260 170 230 170 Q 200 170 220 200"/>
+    <text x="265" y="170" font-family="Arial" font-size="10" fill="black">outer=1, inner=0 / enter=0, exit=0</text>
+    
+    <!-- ENTER_BOTH self-loop -->
+    <path d="M 240 350 Q 260 320 230 320 Q 200 320 220 350"/>
+    <text x="265" y="320" font-family="Arial" font-size="10" fill="black">outer=1, inner=1 / enter=0, exit=0</text>
+    
+    <!-- ENTER_INNER self-loop -->
+    <path d="M 240 500 Q 260 470 230 470 Q 200 470 220 500"/>
+    <text x="265" y="470" font-family="Arial" font-size="10" fill="black">outer=0, inner=1 / enter=0, exit=0</text>
+    
+    <!-- EXIT_INNER self-loop -->
+    <path d="M 640 200 Q 660 170 630 170 Q 600 170 620 200"/>
+    <text x="665" y="170" font-family="Arial" font-size="10" fill="black">outer=0, inner=1 / enter=0, exit=0</text>
+    
+    <!-- EXIT_BOTH self-loop -->
+    <path d="M 640 350 Q 660 320 630 320 Q 600 320 620 350"/>
+    <text x="665" y="320" font-family="Arial" font-size="10" fill="black">outer=1, inner=1 / enter=0, exit=0</text>
+    
+    <!-- EXIT_OUTER self-loop -->
+    <path d="M 640 500 Q 660 470 630 470 Q 600 470 620 500"/>
+    <text x="665" y="470" font-family="Arial" font-size="10" fill="black">outer=1, inner=0 / enter=0, exit=0</text>
+    
+    <!-- Special case transitions -->
+    <!-- ENTER_BOTH to IDLE -->
+    <path d="M 170 325 Q 120 250 150 150 Q 180 80 360 90"/>
+    <text x="130" y="200" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- EXIT_BOTH to IDLE -->
+    <path d="M 630 325 Q 680 250 650 150 Q 620 80 440 90"/>
+    <text x="670" y="200" font-family="Arial" font-size="10" fill="black">outer=0, inner=0 / enter=0, exit=0</text>
+    
+    <!-- "Impossible" transitions -->
+    <path d="M 160 350 Q 90 350 90 500 Q 140 530 175 515" stroke-dasharray="5,5"/>
+    <text x="40" y="430" font-family="Arial" font-size="9" fill="black">outer=1, inner=0 (impossible)</text>
+    
+    <path d="M 240 350 Q 350 350 400 300 Q 450 350 560 350" stroke-dasharray="5,5"/>
+    <text x="400" y="320" font-family="Arial" font-size="9" fill="black">outer=0, inner=1 (impossible)</text>
+    
+    <path d="M 640 350 Q 710 350 710 500 Q 660 530 625 515" stroke-dasharray="5,5"/>
+    <text x="720" y="430" font-family="Arial" font-size="9" fill="black">outer=0, inner=1 (impossible)</text>
+    
+    <!-- Title and Legend -->
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold">Parking Lot Occupancy Tracker - Mealy FSM</text>
+    
+    <!-- Legend -->
+    <rect x="40" y="40" width="200" height="60" fill="white" stroke="black"/>
+    <text x="50" y="55" font-family="Arial" font-size="10">Legend:</text>
+    <line x1="50" y1="65" x2="70" y2="65" stroke="black" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+    <text x="75" y="68" font-family="Arial" font-size="10">input / output transition</text>
+    <line x1="50" y1="85" x2="70" y2="85" stroke="black" stroke-width="1.5" stroke-dasharray="5,5"/>
+    <text x="75" y="88" font-family="Arial" font-size="10">"impossible" transition</text>
+    
+    <!-- Reset arrow -->
+    <path d="M 60 100 L 360 100" stroke="#FF0000" stroke-width="2" marker-end="url(#arrowhead)"/>
+    <text x="150" y="95" font-family="Arial" font-size="10" fill="#FF0000">reset</text>
+  </g>
+</svg>

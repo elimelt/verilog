@@ -86,7 +86,7 @@ module parking_fsm (
 				case (sensors)
 					2'b00: ns = IDLE;          // car or ped fully exited
 					2'b11: ns = EXIT_BOTH;     // car reversed direction...should be impossible
-					2'b01: ns = EXIT_OUTER;    // possibly a new pedestrian, or a pedestrian switch directions
+					2'b01: ns = EXIT_INNER;    // possibly a new pedestrian, or a pedestrian switch directions
 					default: ns = EXIT_OUTER;
 				endcase
 			end
