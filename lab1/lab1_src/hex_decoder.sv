@@ -11,7 +11,8 @@ module hex_decoder (
     HEX5 = 7'b1111111;
   
     case (value) //7'b6543210
-      5'd0: begin HEX5 = 7'b1000110; HEX4 = 7'b1000111; HEX3 = 7'b0000110; HEX2 = 7'b0001000; HEX1 = 7'b0101111; HEX0 = 7'b1000000; end //CLEAr 0
+      //CLEAr 0
+      5'd0: begin HEX5 = 7'b1000110; HEX4 = 7'b1000111; HEX3 = 7'b0000110; HEX2 = 7'b0001000; HEX1 = 7'b0101111; HEX0 = 7'b1000000; end
       5'd1: begin HEX0 = 7'b1111001; HEX1 = 7'b1111111; end
       5'd2: begin HEX0 = 7'b0100100; HEX1 = 7'b1111111; end
       5'd3: begin HEX0 = 7'b0110000; HEX1 = 7'b1111111; end
@@ -27,7 +28,14 @@ module hex_decoder (
       5'd13: begin HEX1 = 7'b1111001; HEX0 = 7'b0110000; end
       5'd14: begin HEX1 = 7'b1111001; HEX0 = 7'b0011001; end
       5'd15: begin HEX1 = 7'b1111001; HEX0 = 7'b0010010; end
-      5'd16: begin HEX5 = 7'b0111000; HEX4 = 7'b1000001; HEX3 = 7'b1110001; HEX2 = 7'b1110001; end //FULL
+      5'd16: begin
+        HEX5 = 7'b0001110; // F
+        HEX4 = 7'b1000001; // U
+        HEX3 = 7'b1000111; // L
+        HEX2 = 7'b1000111; // L
+        HEX1 = 7'b1111001; // 1
+        HEX0 = 7'b0000010; // 6
+      end
       default: ;  // blank
     endcase
   end
