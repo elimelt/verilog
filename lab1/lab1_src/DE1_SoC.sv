@@ -10,22 +10,18 @@ module DE1_SoC (CLOCK_50, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, LEDR, V_GPIO);
   
   logic inc, dec, reset, outer, inner;
   logic [4:0] count;
-  
+
   assign V_GPIO[26] = outer;
   assign V_GPIO[27] = inner;
   assign outer = V_GPIO[28];
   assign inner = V_GPIO[29];
   assign reset = V_GPIO[30];
-  
-  
-  
-  // TODO: actually hook this up with lab1
-  
+
   lab1 controller(
-		.clk(CLOCK_50), 
-		.reset(reset), 
-		.outer(outer), 
-		.inner(inner), 
+		.clk(CLOCK_50),
+		.reset(reset),
+		.outer(outer),
+		.inner(inner),
 		.count(count)
 	);
   
@@ -35,7 +31,7 @@ module DE1_SoC (CLOCK_50, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, LEDR, V_GPIO);
 	  .HEX0(HEX0), .HEX1(HEX1), .HEX2(HEX2),
 	  .HEX3(HEX3), .HEX4(HEX4), .HEX5(HEX5)
 	);
-	
+
 
 
 endmodule  // DE1_SoC
