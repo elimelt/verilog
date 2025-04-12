@@ -17,6 +17,7 @@ module DE1_SoC (CLOCK_50, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, LEDR, V_GPIO);
   assign inner = V_GPIO[29];
   assign reset = V_GPIO[30];
 
+  // main application controller, handles car detection and counting
   lab1 controller(
 		.clk(CLOCK_50),
 		.reset(reset),
@@ -25,7 +26,7 @@ module DE1_SoC (CLOCK_50, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, LEDR, V_GPIO);
 		.count(count)
 	);
   
-  
+  // LED display driver
   hex_decoder display_count (
 	  .value(count),
 	  .HEX0(HEX0), .HEX1(HEX1), .HEX2(HEX2),

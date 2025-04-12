@@ -10,6 +10,7 @@ module lab1 (
 
 	logic inc, dec;
 
+	// FSM to handle car detection
 	parking_fsm fsm (
 		.clk(clk),
 		.reset(reset),
@@ -19,6 +20,7 @@ module lab1 (
 		.exit(dec)    						// 1 when a car exits
 	);
 
+	// 5-bit counter
 	car_counter inst (
 		.clk(clk),
 		.reset(reset),
