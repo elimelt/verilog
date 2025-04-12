@@ -9,7 +9,7 @@ module car_counter (
     if (reset) begin
       count <= 5'b00000;
     end else begin
-      if (incr && count < 5'b10001 && !decr) begin
+      if (incr && count < 5'b10000 && !decr) begin
         count <= count + 1;
       end else if (decr && count > 5'b00000 && !incr) begin
         count <= count - 1;
