@@ -1,4 +1,7 @@
-/* Top-level module for DE1-SoC that instantiates the ram module */
+/*
+Top-level module for DE1-SoC that instantiates ram and maps
+inputs/outputs to the DE1-SoC board.
+*/
 module DE1_SoC (
     input  logic        CLOCK_50,
     input  logic [3:0]  KEY,
@@ -13,12 +16,20 @@ module DE1_SoC (
     logic       write;       // write enable
     logic       clk;         // clock from KEY0
     
+    // for displaying address in decimal on HEX5 and HEX4
+    logic [3:0] address_tens;
+    logic [3:0] address_ones;
+
     // connect switches to inputs
     assign data_in = SW[3:1];    // SW3-SW1 for DataIn
     assign address = SW[8:4];    // SW8-SW4 for Address
     assign write = SW[0];        // SW0 for Write signal
     assign clk = ~KEY[0];        // KEY0 for Clock (active low to active high)
     
+    // get digits for display
+    assign address_tens = address / 10;
+    assign address_ones = address % 10;
+
     // instantiate ram module
     ram ram_inst (
         .Address(address),
@@ -28,18 +39,12 @@ module DE1_SoC (
         .DataOut(data_out)
     );
     
-    // display assignments
     logic [6:0] hex0_out, hex1_out, hex4_out, hex5_out;
     
-    // display address on HEX5-HEX4
-    seg7 hex5_display (.hex({1'b0, address[4:2]}), .leds(hex5_out));
-    seg7 hex4_display (.hex({1'b0, address[1:0], 1'b0}), .leds(hex4_out));
-    
-    // display DataIn on HEX1
-    seg7 hex1_display (.hex({1'b0, data_in}), .leds(hex1_out));
-    
-    // display DataOut on HEX0
-    seg7 hex0_display (.hex({1'b0, data_out}), .leds(hex0_out));
+    seg7 hex5_display (.hex(address_tens), .leds(hex5_out));        // address on HEX5
+    seg7 hex4_display (.hex(address_ones), .leds(hex4_out));        // and HEX4
+    seg7 hex1_display (.hex({1'b0, data_in}), .leds(hex1_out));     // DataIn on HEX1
+    seg7 hex0_display (.hex({1'b0, data_out}), .leds(hex0_out));    // DataOut on HEX0
     
     // assign outputs
     assign HEX0 = hex0_out;
