@@ -98,10 +98,10 @@ module parking_fsm (
 		enter = 1'b0;
 		exit = 1'b0;
 
-		if (ps == ENTER_BOTH && ns == ENTER_INNER)
+		if (ps == ENTER_INNER && ns == IDLE)
 			enter = 1'b1;
 
-		if (ps == EXIT_BOTH && ns == EXIT_OUTER)
+		if (ps == EXIT_OUTER && ns == IDLE)
 			exit = 1'b1;
 	end // always_comb
 
