@@ -1,6 +1,6 @@
 /*
-Top-level module for DE1-SoC that instantiates ram and maps
-inputs/outputs to the DE1-SoC board.
+Top-level module for DE1-SoC that instantiates a
+single ram and maps inputs/outputs.
 */
 module DE1_SoC (
     input  logic        CLOCK_50,
@@ -9,7 +9,6 @@ module DE1_SoC (
     output logic [6:0]  HEX0, HEX1, HEX2, HEX3, HEX4, HEX5,
     output logic [9:0]  LEDR
 );
-    // signal declarations
     logic [4:0] address;     // 5-bit address
     logic [2:0] data_in;     // 3-bit data input
     logic [2:0] data_out;    // 3-bit data output
@@ -23,8 +22,8 @@ module DE1_SoC (
     // connect switches to inputs
     assign data_in = SW[3:1];    // SW3-SW1 for DataIn
     assign address = SW[8:4];    // SW8-SW4 for Address
-    assign write = SW[0];        // SW0 for Write signal
-    assign clk = ~KEY[0];        // KEY0 for Clock (active low to active high)
+    assign write   = SW[0];      // SW0 for Write signal
+    assign clk     = ~KEY[0];    // KEY0 for Clock (active low to active high)
     
     // get digits for display
     assign address_tens = address / 10;
@@ -54,7 +53,7 @@ module DE1_SoC (
     assign HEX4 = hex4_out;
     assign HEX5 = hex5_out;
     
-    // connect LEDR for visual feedback
+    // connect LEDRs
     assign LEDR[9:5] = address;  // show address on LEDs
     assign LEDR[4] = write;      // show write signal
     assign LEDR[3:1] = data_in;  // show data input

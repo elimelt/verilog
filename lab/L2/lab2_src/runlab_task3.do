@@ -16,10 +16,15 @@ vlib work
 vlog "./task1.sv"
 vlog "./task1_tb.sv"
 vlog "./ram32x3.v"
+vlog "./ram32x3port2.v"
 vlog "./ram.sv"
 vlog "./seg7.sv"
+vlog "./clock_div.sv"
 vlog "./DE1_SoC.sv"
 vlog "./DE1_SoC_tb.sv"
+vlog "./DE1_SoC_task3.sv"
+vlog "./DE1_SoC_task3_tb.sv"
+
 
 
 # Call vsim to invoke simulator
@@ -27,12 +32,12 @@ vlog "./DE1_SoC_tb.sv"
 #    the testbench module you want to execute.
 #  - If you need the altera_mf_ver library, add "-Lf altera_mf_lib"
 #    (no quotes) to the end of the vsim command
-vsim -voptargs="+acc" -t 1ps -lib work DE1_SoC_tb -Lf altera_mf_ver
+vsim -voptargs="+acc" -t 1ps -lib work DE1_SoC_task3_tb -Lf altera_mf_ver
 
 # Source the wave do file
 #  - This should be the file that sets up the signal window for
 #    the module you are testing.
-do task2b_wave.do
+do task3_wave.do
 
 
 # Set the window types

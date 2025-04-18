@@ -104,7 +104,7 @@ module task1_tb();
         @(posedge clk);
         assert(DataOut == DATA0) 
             else $error(
-					"Verification failed for ADDR0: expected %b, got %b", 
+					"failed for ADDR0: expected %b, got %b",
 					DATA0, DataOut
 				);
         
@@ -115,7 +115,7 @@ module task1_tb();
         @(posedge clk);
         assert(DataOut == DATA1) 
             else $error(
-					"Verification failed for ADDR1: expected %b, got %b", 
+					"failed for ADDR1: expected %b, got %b",
 					DATA1, DataOut
 				);
         
@@ -126,7 +126,7 @@ module task1_tb();
         @(posedge clk);
         assert(DataOut == DATA16) 
             else $error(
-					"Verification failed for ADDR16: expected %b, got %b", 
+					"failed for ADDR16: expected %b, got %b",
 					DATA16, DataOut
 				);
         
@@ -137,7 +137,7 @@ module task1_tb();
         @(posedge clk);
         assert(DataOut == DATA31) 
             else $error(
-					"Verification failed for ADDR31: expected %b, got %b", 
+					"failed for ADDR31: expected %b, got %b",
 					DATA31, DataOut
 				);
         

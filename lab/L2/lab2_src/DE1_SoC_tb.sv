@@ -46,11 +46,10 @@ module DE1_SoC_tb();
         SW[0] = 1'b1;        // enable write
         @(posedge CLOCK_50);
         
-        // simulate KEY0 press to trigger clock
+        // trigger clock
         KEY[0] = 1'b0;
         @(posedge CLOCK_50);
         
-        // release KEY0
         KEY[0] = 1'b1;
         @(posedge CLOCK_50);
         
@@ -61,11 +60,10 @@ module DE1_SoC_tb();
         // test case 2: read from address 5'b00011
         @(posedge CLOCK_50);
         
-        // press KEY0 to trigger read
+        // trigger clock
         KEY[0] = 1'b0;
         @(posedge CLOCK_50);
         
-        // release KEY0
         KEY[0] = 1'b1;
         @(posedge CLOCK_50);
         
@@ -75,11 +73,10 @@ module DE1_SoC_tb();
         SW[0] = 1'b1;        // enable write
         @(posedge CLOCK_50);
         
-        // press KEY0 to trigger clock
+        // trigger clock
         KEY[0] = 1'b0;
         @(posedge CLOCK_50);
         
-        // release KEY0
         KEY[0] = 1'b1;
         @(posedge CLOCK_50);
         
@@ -87,22 +84,14 @@ module DE1_SoC_tb();
         SW[0] = 1'b0;        // disable write
         @(posedge CLOCK_50);
         
-        // press KEY0 to trigger read
+        // trigger clock
         KEY[0] = 1'b0;
         @(posedge CLOCK_50);
         
-        // release KEY0
         KEY[0] = 1'b1;
         @(posedge CLOCK_50);
-        
-        $display("Tests completed!");
+
         $stop;
-    end
-    
-    // monitor changes
-    initial begin
-        $monitor("Time=%0t, SW=%b, KEY[0]=%b, LED=%b, HEX0=%b, HEX1=%b, HEX4=%b, HEX5=%b", 
-                 $time, SW, KEY[0], LEDR, HEX0, HEX1, HEX4, HEX5);
     end
     
 endmodule
