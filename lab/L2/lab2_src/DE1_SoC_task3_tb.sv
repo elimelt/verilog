@@ -90,13 +90,13 @@ module DE1_SoC_task3_tb();
         repeat(16) @(posedge CLOCK_50);
         KEY[3] = 1'b1;
         
-        ram_toggle = 1'b1; // Switch to dual-port RAM
+        ram_toggle = 1'b1; // switch to dual-port RAM
         
         // let counter read all addresses
         repeat(512) @(posedge CLOCK_50);
         
         $display("4: writing to all addresses in dual-port RAM");
-        write_enable = 1'b1; // Enable writing
+        write_enable = 1'b1; // enable writing
         
         // write to every address from 0-31, value = ~(address % 2)
         for (int i = 0; i < 32; i++) begin

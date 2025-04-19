@@ -41,7 +41,7 @@ module DE1_SoC_task3 (
     
     // select address for single-port RAM
     assign ram_address = write ? w_address : r_address;
-    // Select which RAM's output to display based on toggle switch
+    // select which RAM's output to display
     assign data_out = toggle ? data_out3 : data_out2;
      
     // get digits for display
@@ -54,21 +54,21 @@ module DE1_SoC_task3 (
 	 
 	assign addr_clk = divided[26];
     
-    // Single-port RAM (task2)
+    // single-port RAM (task2)
     ram ram_task2_inst (
-        .Address(ram_address),  // Use the selected address
+        .Address(ram_address),  // use selected address
         .DataIn(data_in),
         .Write(write & ~toggle),
         .clk(clk),
         .DataOut(data_out2)
     );
     
-    // Dual-port RAM (task3)
+    // dual-port RAM (task3)
     ram32x3port2 ram_task3_inst (
         .clock(clk),
         .data(data_in),
-        .rdaddress(r_address),  // Read port always uses counter address
-        .wraddress(w_address),  // Write port always uses switch address
+        .rdaddress(r_address),  // read port always uses counter address
+        .wraddress(w_address),  // write port always uses switch address
         .wren(write & toggle),
         .q(data_out3)
     );
@@ -94,7 +94,7 @@ module DE1_SoC_task3 (
     assign LEDR[9:5] = toggle ? (write ? w_address : r_address) : ram_address;
     assign LEDR[4] = write;         // show write signal
     assign LEDR[3:1] = data_in;     // show data input
-    assign LEDR[0] = toggle;        // Show toggle state on LED0
+    assign LEDR[0] = toggle;        // show toggle state on LED0
 	 
     always_ff @(posedge addr_clk) begin
         if (reset) begin
