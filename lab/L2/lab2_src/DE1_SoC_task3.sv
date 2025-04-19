@@ -52,7 +52,7 @@ module DE1_SoC_task3 (
 
 	clock_div cd(.clock(CLOCK_50), .reset(reset), .div(divided));
 	 
-	assign addr_clk = divided[3];
+	assign addr_clk = divided[26];
     
     // Single-port RAM (task2)
     ram ram_task2_inst (
