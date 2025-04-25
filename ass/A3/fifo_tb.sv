@@ -85,8 +85,8 @@ module fifo_tb ();
 
 		// now fill up
 		wr = 1;
-		// write 8 entries
-		for (int i = 0; i < 8; i++) begin
+		// write 16 entries
+		for (int i = 0; i < 16; i++) begin
 			w_data = {8'hA0 + i, 8'hB0 + i};
 			#10;
 		end

@@ -92,7 +92,7 @@ module fifo_ctrl #(parameter ADDR_WIDTH=4)
 						empty_next = 0;
 
 						// check full
-						if ((wr_ptr_next == rd_ptr) && upper)
+						if ((wr_ptr_next == rd_ptr))
 							full_next = 1;
 					end
 
