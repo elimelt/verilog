@@ -6,23 +6,40 @@
  * and r_data holds the value of the head of the buffer (unless empty).
  */
 module fifo #(parameter DATA_WIDTH=8, ADDR_WIDTH=4)
-            (clk, reset, rd, wr, empty, full, w_data, r_data);
+			(clk, reset, rd, wr, empty, full, w_data, r_data);
 
 	input  logic clk, reset, rd, wr;
 	output logic empty, full;
-	input  logic [DATA_WIDTH-1:0] w_data;
+	input  logic [(2*DATA_WIDTH-1):0] w_data;  // write port twice as wide as read port
 	output logic [DATA_WIDTH-1:0] r_data;
-	
+
 	// signal declarations
 	logic [ADDR_WIDTH-1:0] w_addr, r_addr;
 	logic w_en;
-	
-	// enable write only when FIFO is not full
-	// or if reading and writing simultaneously
+	logic upper;  // flag for upper/lower half of data being read
 	assign w_en = wr & (~full | rd);
-	
+
 	// instantiate FIFO controller and register file
-	fifo_ctrl #(ADDR_WIDTH) c_unit (.*);
-	reg_file #(DATA_WIDTH, ADDR_WIDTH) r_unit (.*);
-	
+	fifo_ctrl #(ADDR_WIDTH) c_unit (
+		.clk(clk),
+		.reset(reset),
+		.rd(rd),
+		.wr(wr),
+		.empty(empty),
+		.full(full),
+		.w_addr(w_addr),
+		.r_addr(r_addr),
+		.upper(upper)
+	);
+
+	reg_file #(DATA_WIDTH, ADDR_WIDTH) r_unit (
+		.clk(clk),
+		.w_data(w_data),
+		.w_en(w_en),
+		.w_addr(w_addr),
+		.r_addr(r_addr),
+		.upper(upper),
+		.r_data(r_data)
+	);
+
 endmodule  // fifo

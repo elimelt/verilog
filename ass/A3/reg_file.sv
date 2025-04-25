@@ -3,22 +3,25 @@
  * port (w_data -> w_addr if w_en).
  */
 module reg_file #(parameter DATA_WIDTH=8, ADDR_WIDTH=2)
-                (clk, w_data, w_en, w_addr, r_addr, r_data);
+				(clk, w_data, w_en, w_addr, r_addr, upper, r_data);
 
 	input  logic clk, w_en;
 	input  logic [ADDR_WIDTH-1:0] w_addr, r_addr;
-	input  logic [DATA_WIDTH-1:0] w_data;
+	input  logic [(2*DATA_WIDTH-1):0] w_data;
+	input  logic upper;  // flag for upper/lower half of data being read
 	output logic [DATA_WIDTH-1:0] r_data;
-	
+
 	// array declaration (registers)
-	logic [DATA_WIDTH-1:0] array_reg [0:2**ADDR_WIDTH-1];
-	
+	logic [(2*DATA_WIDTH-1):0] array_reg [0:2**ADDR_WIDTH-1];
 	// write operation (synchronous)
 	always_ff @(posedge clk)
 	   if (w_en)
 		   array_reg[w_addr] <= w_data;
-	
-	// read operation (asynchronous)
-	assign r_data = array_reg[r_addr];
-	
+
+	always_comb begin
+		if (upper)
+			r_data = array_reg[r_addr][(2*DATA_WIDTH-1):DATA_WIDTH];
+		else // (lower half)
+			r_data = array_reg[r_addr][(DATA_WIDTH-1):0];
+	end  // always_comb
 endmodule  // reg_file
