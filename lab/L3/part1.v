@@ -25,6 +25,9 @@ module part1 (CLOCK_50, CLOCK2_50, KEY, FPGA_I2C_SCLK, FPGA_I2C_SDAT, AUD_XCK,
 	assign read = read_ready;                // Assert read when read_ready is high
 	assign write = read_ready & write_ready; // Only write when both read and write are ready
 	
+	
+	
+	
 /////////////////////////////////////////////////////////////////////////////////
 // Audio CODEC interface. 
 //
