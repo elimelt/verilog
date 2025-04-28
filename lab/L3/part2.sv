@@ -26,39 +26,37 @@ module part2 (CLOCK_50, CLOCK2_50, KEY, FPGA_I2C_SCLK, FPGA_I2C_SDAT, AUD_XCK,
 //	assign write = read_ready & write_ready; // Only write when both read and write are ready
 	
 	/////////////////////////////////
-	// Your code here:
-	// 	Instead of reading from input, read directly from audio_data_rom's
-	// 	initial contents, cycling 48,000/sec
+	// Instead of reading from input, read directly from audio_data_rom's
+	// initial contents, cycling 48,000/sec
 	/////////////////////////////////
 	
-	// Define address counter and RAM interface signals
-	reg [6:0] address;
-	wire [23:0] ram_data;
+	reg [6:0] address;			// read address for the RAM
+	wire [23:0] ram_data;		// RAM data output
 	
-	// RAM module instantiation
+	// rom we read from, initialized with audio data from mif
 	ram audio_data_rom (
 		.address(address),
 		.clock(CLOCK_50),
-		.data(24'd0),      // Not writing, so data input doesn't matter
-		.wren(1'b0),       // We're only reading from the RAM
+		.data(24'd0),      // not writing
+		.wren(1'b0),       // only reading
 		.q(ram_data)
 	);
 	
-	// Assign RAM data to audio output
+	// RAM data to audio output
 	assign writedata_left = ram_data;
 	assign writedata_right = ram_data;
 	
-	// We don't need to read from input anymore
+	// don't read from input anymore
 	assign read = 1'b0;
 	
-	// Write when CODEC is ready
+	// write when CODEC is ready
 	assign write = write_ready;
 	
-	// Update RAM address counter when we write
+	// update address on write
 	always @(posedge CLOCK_50) begin
 		if (reset)
 			address <= 7'd0;
-		else if (write && write_ready)  // Only increment when we actually write
+		else if (write && write_ready) // write when CODEC is ready
 			address <= (address == 7'd127) ? 7'd0 : address + 7'd1;  // Loop back to start when we reach the end
 	end
 	
