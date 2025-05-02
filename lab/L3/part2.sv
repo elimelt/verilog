@@ -30,7 +30,7 @@ module part2 (CLOCK_50, CLOCK2_50, KEY, FPGA_I2C_SCLK, FPGA_I2C_SDAT, AUD_XCK,
 	// initial contents, cycling 48,000/sec
 	/////////////////////////////////
 	
-	reg [6:0] address;			// read address for the RAM
+	reg [15:0] address;			// read address for the RAM
 	wire [23:0] ram_data;		// RAM data output
 	
 	// rom we read from, initialized with audio data from mif
@@ -55,9 +55,9 @@ module part2 (CLOCK_50, CLOCK2_50, KEY, FPGA_I2C_SCLK, FPGA_I2C_SDAT, AUD_XCK,
 	// update address on write
 	always @(posedge CLOCK_50) begin
 		if (reset)
-			address <= 7'd0;
+			address <= 15'd0;
 		else if (write && write_ready) // write when CODEC is ready
-			address <= (address == 7'd127) ? 7'd0 : address + 7'd1;  // Loop back to start when we reach the end
+			address <= (address == 15'd48000) ? 15'd0 : address + 1'b1; // wrap around
 	end
 	
 /////////////////////////////////////////////////////////////////////////////////
