@@ -17,4 +17,4 @@ module bit_counter_datapath (
     if (init_res)
       result <= 0;
   end
- endmodule // bit_counter_datapath
+endmodule // bit_counter_datapath
