@@ -17,7 +17,7 @@ module bit_counter_tb ();
     reset <= 1;                                 @(posedge clk);
     start <= 0; reset <= 0; A <= 8'b1010_1010;  @(posedge clk);
     start <= 1;                                 @(posedge clk);
-    $repeat(8)                                  @(posedge clk);
+    repeat(10)                                  @(posedge clk);
     $stop();
   end
 endmodule // bit_counter_tb

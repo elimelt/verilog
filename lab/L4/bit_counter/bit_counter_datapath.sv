@@ -17,7 +17,4 @@ module bit_counter_datapath (
     if (init_res)
       result <= 0;
   end
-
-  // output assignment
-  assign done = (A_curr == 0);
-endmodule // bit_counter_datapath
+ endmodule // bit_counter_datapath

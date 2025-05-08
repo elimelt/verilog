@@ -5,10 +5,10 @@ module bit_counter (
   input logic clk, reset, start
 );
 
-  logic incr_res, init_res, init_A, shiftr_A;
   logic [7:0] A_curr;
+  logic incr_res, init_res, init_A, shiftr_A;
 
-  bit_counter_datapath D (.*);
-  bit_counter_ctrl C (.*);
+  bit_counter_datapath dp (.*);
+  bit_counter_ctrl ctrl (.*);
 
 endmodule // bit_counter
