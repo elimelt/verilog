@@ -1,3 +1,4 @@
+`timescale 1 ps / 1 ps
 
 module binary_search_tb ();
   logic Found, Done;
@@ -15,7 +16,16 @@ module binary_search_tb ();
 
   initial begin
     reset <= 1; @(posedge clk);
-    reset <= 0; A <= 8'd5; start <= 1; @(posedge clk);
+    reset <= 0; A <= 8'd15; start <= 1; @(posedge clk);
+    repeat (32)  @(posedge clk);
+	 reset <= 1; @(posedge clk);
+    reset <= 0; A <= 8'd31; start <= 1; @(posedge clk);
+    repeat (32)  @(posedge clk);
+	 reset <= 1; @(posedge clk);
+	 reset <= 0; A <= 8'd0; start <= 1; @(posedge clk);
+    repeat (32)  @(posedge clk);
+	 reset <= 1; @(posedge clk);
+	 reset <= 0; A <= 8'd48; start <= 1; @(posedge clk);
     repeat (32)  @(posedge clk);
     $stop();
   end

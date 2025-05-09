@@ -1,15 +1,15 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /bit_counter_tb/CLOCK_PERIOD
-add wave -noupdate /bit_counter_tb/result
+add wave -noupdate -radix unsigned /bit_counter_tb/result
 add wave -noupdate /bit_counter_tb/A
 add wave -noupdate /bit_counter_tb/clk
 add wave -noupdate /bit_counter_tb/reset
 add wave -noupdate /bit_counter_tb/start
 add wave -noupdate /bit_counter_tb/done
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {0 ps} 0}
-quietly wave cursor active 0
+WaveRestoreCursors {{Cursor 1} {211 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left

@@ -8,7 +8,7 @@ module binary_search (
 );
 
   logic [7:0] curr_data;
-  logic [4:0] L, R, M
+  logic [4:0] L, R, M;
 
   // control signals
   logic load_regs, set_Addr, set_L, set_R, set_Found, set_Done;

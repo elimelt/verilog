@@ -15,9 +15,21 @@ module bit_counter_tb ();
 
   initial begin
     reset <= 1;                                 @(posedge clk);
-    start <= 0; reset <= 0; A <= 8'b1010_1010;  @(posedge clk);
+    start <= 0; reset <= 0; A <= 8'b10101010;   @(posedge clk);
     start <= 1;                                 @(posedge clk);
     repeat(10)                                  @(posedge clk);
-    $stop();
+    reset <= 1;                                 @(posedge clk);
+    start <= 0; reset <= 0; A <= 8'b01010101;   @(posedge clk);
+    start <= 1;                                 @(posedge clk);
+    repeat(10)  											@(posedge clk);
+	 reset <= 1;                                 @(posedge clk);
+    start <= 0; reset <= 0; A <= 8'b11111111;   @(posedge clk);
+    start <= 1;                                 @(posedge clk);
+    repeat(10)  											@(posedge clk);
+	 reset <= 1;                                 @(posedge clk);
+    start <= 0; reset <= 0; A <= 8'b00000000;   @(posedge clk);
+    start <= 1;                                 @(posedge clk);
+    repeat(10)  											@(posedge clk);
+	 $stop();
   end
 endmodule // bit_counter_tb

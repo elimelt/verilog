@@ -19,7 +19,6 @@ vlog "./bit_counter_datapath.sv"
 vlog "./bit_counter_tb.sv"
 
 
-
 # Call vsim to invoke simulator
 #  - Make sure the last item on the line is the correct name of
 #    the testbench module you want to execute.

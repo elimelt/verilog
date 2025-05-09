@@ -5,7 +5,7 @@ module binary_search_datapath (
   input logic clk
 );
 
-  assign M = (L + R) / 2;
+  assign M = L + (R - L) / 2;
 
   always_ff @(posedge clk) begin
     if (load_regs) begin
