@@ -16,15 +16,15 @@ module bit_counter_ctrl (
     case (ps)
       S1: ns = start          ? S2 : S1;
       S2: ns = (A_curr == 0)  ? S3 : S2;
-      S3: ns = start          ? S3 : S1;
+      S3: ns = start          ? S1 : S3;
     endcase
   end
 
   // output assignment
   assign incr_res  = (ps == S2) & (ns == S2) & (A_curr[0] == 1);
-  assign init_A       = (ps == S1) & (~start);
-  assign shiftr_A     = (ps == S2);
-  assign done         = (ps == S3);
-  assign init_res  = (ps == S1);
+  assign init_A    = (ps == S1) & (~start);
+  assign shiftr_A  = (ps == S2);
+  assign done      = (ps == S3);
+  assign init_res  = (ps == S1) && start;
 
 endmodule
