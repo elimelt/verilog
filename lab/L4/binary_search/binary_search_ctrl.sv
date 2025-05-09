@@ -17,8 +17,8 @@ module binary_search_ctrl (
   always_comb
     case (ps)
       S_IDLE:             ns = !start           ? S_IDLE : S_LOOP_RANGE_CHECK;
-      S_LOOP_RANGE_CHECK: ns = 
-			(L > R || (L == R && curr_data != A))  ? S_DONE : S_COMPARE;
+      S_LOOP_RANGE_CHECK: ns =
+			  (L > R || (L == R && curr_data != A))   ? S_DONE : S_COMPARE;
       S_COMPARE:          ns = (curr_data == A) ? S_DONE : S_LOOP_RANGE_CHECK;
       S_DONE:             ns = !start           ? S_IDLE : S_DONE;
     endcase
