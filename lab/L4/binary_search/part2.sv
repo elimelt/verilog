@@ -5,6 +5,11 @@ module part2 (
   output logic [6:0]  HEX0, HEX1,  
   output logic [9:0]  LEDR  
 );
+
+  logic [31:0] div;
+  clock_div(CLOCK_50, reset, div);
+  logic clk;
+  assign clk = div[15];
   
   logic [4:0] Loc;      
   logic Found, Done;     
@@ -20,20 +25,20 @@ module part2 (
     .Done(Done),
     .Loc(Loc),
     .A(SW[7:0]),
-    .clk(CLOCK_50),
+    .clk(clk),
     .reset(reset), 
     .start(start)
   );
   
   // upper digit 
   seg7 hex0_display (
-    .hex(Loc[3:0]),
+    .hex(Loc % 10),
     .leds(HEX0)
   );
   
   // lower digit
   seg7 hex1_display (
-    .hex({3'b000, Loc[4]}),
+    .hex(Loc / 10),
     .leds(HEX1)
   );
   

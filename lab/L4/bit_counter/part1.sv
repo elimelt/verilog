@@ -5,6 +5,11 @@ module part1 (
   output logic [6:0]  HEX0, 
   output logic [9:0]  LEDR         
 );
+
+  logic [31:0] div;
+  clock_div(CLOCK_50, reset, div);
+  logic clk;
+  assign clk = div[25];
   
   logic [3:0] result;
   logic done;           
@@ -22,7 +27,7 @@ module part1 (
     .result(result),
     .done(done),
     .A(SW[7:0]),
-    .clk(CLOCK_50),
+    .clk(clk),
     .reset(reset),
     .start(start)
   );
