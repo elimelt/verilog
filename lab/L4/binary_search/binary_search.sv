@@ -1,5 +1,7 @@
 `timescale 1 ps / 1 ps
-
+/*
+ * binary search implementation using ASM
+*/
 module binary_search (
   output logic Found, Done,
   output logic [4:0] Loc,

@@ -1,3 +1,6 @@
+/*
+ * datapath for binary search ASM
+*/
 module binary_search_datapath (
   output logic [4:0] L, R, Loc, M,
   output logic Found, Done,

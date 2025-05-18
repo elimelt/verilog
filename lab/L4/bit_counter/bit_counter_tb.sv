@@ -1,4 +1,6 @@
-
+/*
+ * testbench for bit counter
+*/
 module bit_counter_tb ();
   logic [3:0] result;
   logic [7:0] A;

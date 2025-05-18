@@ -1,3 +1,6 @@
+/*
+ * controller for bit counter
+*/
 module bit_counter_ctrl (
   output logic init_res, incr_res, init_A, shiftr_A, done,
   input logic start, clk, reset,

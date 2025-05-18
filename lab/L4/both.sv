@@ -1,3 +1,9 @@
+/*
+ * top level module for both bit counter and binary search.
+ * takes inputs SW[9] as mode, SW[7:0] as input value, KEY[0] as reset, KEY[3] as start.
+ * shows result on HEX0 and HEX1.
+ * shows Done on LEDR[9] and Found on LEDR[0].
+*/
 module both (
   input  logic        CLOCK_50,
   input  logic [9:0]  SW,

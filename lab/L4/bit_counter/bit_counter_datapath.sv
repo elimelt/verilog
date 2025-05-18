@@ -1,3 +1,6 @@
+/*
+ * datapath for bit counter
+*/
 module bit_counter_datapath (
   output logic [7:0] A_curr,
   output logic [3:0] result,

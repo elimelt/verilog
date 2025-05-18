@@ -1,5 +1,7 @@
 `timescale 1 ps / 1 ps
-
+/*
+ * testbench for binary search ASM
+*/
 module binary_search_tb ();
   logic Found, Done;
   logic [4:0] Loc;

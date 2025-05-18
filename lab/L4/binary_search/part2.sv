@@ -1,3 +1,8 @@
+/*
+ * top level module for binary search. Shows location of target value on HEX0 and HEX1.
+ * Takes inputs SW[7:0] as target value, KEY[0] as reset, KEY[3] as start.
+ * Shows Done on LEDR[9] and Found on LEDR[0].
+*/
 module part2 (
   input  logic        CLOCK_50,    
   input  logic [7:0]  SW,          

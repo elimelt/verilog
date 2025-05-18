@@ -1,3 +1,8 @@
+/*
+ * top level module for bit counter. Shows result on HEX0.
+ * Takes inputs SW[7:0] as input value, KEY[0] as reset, KEY[3] as start.
+ * Shows Done on LEDR[9] and input value on LEDR[7:0].
+*/
 module part1 (
   input  logic        CLOCK_50,    
   input  logic [7:0]  SW,          

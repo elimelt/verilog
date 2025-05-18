@@ -1,3 +1,6 @@
+/*
+ * bit counter implementation
+*/
 module bit_counter (
   output logic [3:0] result,
   output logic done,

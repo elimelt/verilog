@@ -1,3 +1,6 @@
+/*
+ * controller for binary search ASM
+*/
 module binary_search_ctrl (
   output logic load_regs, set_Addr, set_L, set_R, set_Found, set_Done,
   input logic [4:0] L, R,
