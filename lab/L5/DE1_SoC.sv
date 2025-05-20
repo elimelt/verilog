@@ -21,6 +21,29 @@
 module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50, 
 	VGA_R, VGA_G, VGA_B, VGA_BLANK_N, VGA_CLK, VGA_HS, VGA_SYNC_N, VGA_VS);
 	
+	localparam SCREEN_WIDTH = 641;
+	localparam SCREEN_HEIGHT = 480;
+	localparam ORIGIN_X = 0;
+	localparam ORIGIN_Y = 0;
+	localparam TOP_LEFT_X = 50;
+	localparam TOP_LEFT_Y = 50;
+	localparam TOP_RIGHT_X = 400;
+	localparam TOP_RIGHT_Y = 50;
+	localparam BOTTOM_LEFT_X = 50;
+	localparam BOTTOM_LEFT_Y = 400;
+	localparam BOTTOM_RIGHT_X = 400;
+	localparam BOTTOM_RIGHT_Y = 400;
+	localparam MID_X = 240;
+	localparam MID_Y = 240;
+	localparam NEAR_LEFT_X = 100;
+	localparam NEAR_RIGHT_X = 300;
+	localparam NEAR_TOP_Y = 100;
+	localparam NEAR_BOTTOM_Y = 340;
+	localparam FAR_RIGHT_X = 400;
+	localparam FAR_BOTTOM_Y = 400;
+	localparam SMALL_OFFSET_X = 200;
+	localparam LARGE_OFFSET_Y = 300;
+	
 	output logic [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 	output logic [9:0] LEDR;
 	input logic [3:0] KEY;
@@ -44,16 +67,14 @@ module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50,
 	assign LEDR[8:0] = SW[8:0];
 	
 	logic [10:0] x0, y0, x1, y1, x, y;
-	
-	logic toggle_color;
-	
+	logic color;
 	
 	VGA_framebuffer fb (
 		.clk50			(CLOCK_50), 
 		.reset			(1'b0), 
 		.x, 
 		.y,
-		.pixel_color	(toggle_color), 
+		.pixel_color	(color), 
 		.pixel_write	(1'b1),
 		.VGA_R, 
 		.VGA_G, 
@@ -64,19 +85,129 @@ module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50,
 		.VGA_BLANK_n	(VGA_BLANK_N), 
 		.VGA_SYNC_n		(VGA_SYNC_N));
 				
-	logic [31:0] clocks;
-	clock_div clk_div (.clock(CLOCK_50), .reset, .div(clocks));
+	logic done, init_clear, reset;
+
+	line_drawer lines (.clk(CLOCK_50), .reset(reset), .x0, .y0, .x1, .y1, .x, .y, .done);
+	
+	logic [31:0] clocks; 
+
+	clock_div cdiv (.clock(CLOCK_50),  
+                       .reset(reset),  
+                       .div(clocks));
+	// controls state
+	logic divided_clk; 
+	assign divided_clk = clocks[25];
+	
+	enum {
+		CLEAR, 
+		LEFT, 
+		RIGHT, 
+		HORIZONTAL, 
+		VERTICAL,
+		STEEP, 
+		SHALLOW,
+		NEGATIVE, 
+		POSITIVE
+	} ps, ns;
+	
+	assign reset = (ps == CLEAR);
 	
 	
-	logic done, reset, trigger_clear, clk;
-	assign clk = clocks[24];
+	always_ff @(posedge CLOCK_50) begin
+		if(reset) begin
+			x0 <= 0;
+			x1 <= 0;
+			y0 <= 0;
+			y1 <= SCREEN_HEIGHT;
+			ns <= CLEAR;
+		end else if(ps == CLEAR) begin
+			
+			case (ps)
+				CLEAR : begin
+							color <= 1'b0;
+							y0 <= 0;
+							y1 <= SCREEN_HEIGHT;
+							
+							if(x0 < SCREEN_WIDTH) begin
+								if(done) begin
+									x0 <= x0 + 1;
+									x1 <= x1 + 1;
+								end
+							end 
+						end 
+				LEFT : begin
+							x0 <= BOTTOM_RIGHT_X;
+							y0 <= BOTTOM_RIGHT_Y;
+							x1 <= TOP_LEFT_X;
+							y1 <= TOP_LEFT_Y;
+							ns <= RIGHT;
+						 end
+				RIGHT : begin
+							x0 <= ORIGIN_X;
+							y0 <= ORIGIN_Y;
+							x1 <= MID_X;
+							y1 <= MID_Y;
+							ns <= NEGATIVE;
+						 end
+				NEGATIVE : begin
+							x0 <= TOP_RIGHT_X;
+							y0 <= TOP_RIGHT_Y;
+							x1 <= NEAR_LEFT_X;
+							y1 <= NEAR_BOTTOM_Y;
+							ns <= POSITIVE;
+						 end
+				POSITIVE : begin
+							x0 <= BOTTOM_LEFT_X;
+							y0 <= BOTTOM_LEFT_Y;
+							x1 <= SMALL_OFFSET_X;
+							y1 <= TOP_LEFT_Y;
+							ns <= STEEP;
+						 end
+				STEEP : begin
+							x0 <= TOP_LEFT_X;
+							y0 <= TOP_LEFT_Y;
+							x1 <= NEAR_LEFT_X;
+							y1 <= FAR_BOTTOM_Y;
+							ns <= SHALLOW;
+						 end
+				SHALLOW : begin
+							x0 <= TOP_LEFT_X;
+							y0 <= TOP_LEFT_Y;
+							x1 <= FAR_RIGHT_X;
+							y1 <= NEAR_TOP_Y;
+							ns <= HORIZONTAL;
+						 end
+				HORIZONTAL : begin
+							x0 <= TOP_LEFT_X;
+							y0 <= TOP_LEFT_Y;
+							x1 <= NEAR_RIGHT_X;
+							y1 <= TOP_LEFT_Y;
+							ns <= VERTICAL;
+						 end
+				VERTICAL : begin
+							x0 <= TOP_LEFT_X;
+							y0 <= TOP_LEFT_Y;
+							x1 <= TOP_LEFT_X;
+							y1 <= LARGE_OFFSET_Y;
+							ns <= LEFT;
+						 end
+			endcase
+			
+		end
 	
-	line_drawer lines (.clk(CLOCK_50), .reset,.x0, .y0, .x1, .y1, .x, .y, .done);
+	end
+	
+	
+	always_ff @(posedge divided_clk) begin
+		
+		if(ps == CLEAR)
+			ps <= ns;
+		else begin
+			ps <= CLEAR;
+		end
+		
+	end
 	
 	assign LEDR[9] = done;
-	assign x0 = 0;
-	assign y0 = 0;
-	assign x1 = 240;
-	assign y1 = 240;
 
 endmodule  // DE1_SoC
