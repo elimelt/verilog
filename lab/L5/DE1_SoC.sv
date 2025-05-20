@@ -45,12 +45,15 @@ module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50,
 	
 	logic [10:0] x0, y0, x1, y1, x, y;
 	
+	logic toggle_color;
+	
+	
 	VGA_framebuffer fb (
 		.clk50			(CLOCK_50), 
 		.reset			(1'b0), 
 		.x, 
 		.y,
-		.pixel_color	(1'b1), 
+		.pixel_color	(toggle_color), 
 		.pixel_write	(1'b1),
 		.VGA_R, 
 		.VGA_G, 
@@ -61,9 +64,14 @@ module DE1_SoC (HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, KEY, LEDR, SW, CLOCK_50,
 		.VGA_BLANK_n	(VGA_BLANK_N), 
 		.VGA_SYNC_n		(VGA_SYNC_N));
 				
-	logic done;
-
-	line_drawer lines (.clk(CLOCK_50), .reset(1'b0),.x0, .y0, .x1, .y1, .x, .y, .done);
+	logic [31:0] clocks;
+	clock_div clk_div (.clock(CLOCK_50), .reset, .div(clocks));
+	
+	
+	logic done, reset, trigger_clear, clk;
+	assign clk = clocks[24];
+	
+	line_drawer lines (.clk(CLOCK_50), .reset,.x0, .y0, .x1, .y1, .x, .y, .done);
 	
 	assign LEDR[9] = done;
 	assign x0 = 0;

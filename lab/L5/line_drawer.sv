@@ -15,13 +15,12 @@
  *   done	- flag that line has finished drawing
  *
  */
- module line_drawer (
+module line_drawer (
 	input  logic clk, reset,
 	input  logic [10:0] x0, y0, x1, y1,
 	output logic [10:0] x, y,
 	output logic done 
 );
-
 	logic signed [11:0] dx, dy; //signed difference between start and end coordinate y1-y0, x1-x0
 	logic signed [11:0] error; //step variable for vertical offset
 	logic signed [10:0] tx0, tx1, ty0, ty1; //swapped coordinates 
@@ -29,7 +28,8 @@
 	logic signed [10:0] nextX, nextY, ystep;
 	logic isSteep; //checks for steepness
 	logic active; //indicates initialisation before drawing line
-
+	logic init_done; //tracks if initialization is complete
+	
 	always_comb begin
 		dx = x1 - x0;
 		dy = y1 - y0;
@@ -37,13 +37,14 @@
 		absdy = dy[11] ? -dy[10:0] : dy[10:0];
 		isSteep = (absdy > absdx); //steepness is true if abs change in y > abs change in x
 	end
-
-	always_ff @(posedge clk or posedge reset) begin
+	
+	always_ff @(posedge clk) begin
 		if (reset) begin
 			active <= 1;
 			done <= 0;
-
-			// Check for steep lines
+			init_done <= 0;
+			
+			// Check for steep lines and swap coordinates if needed
 			if (isSteep) begin
 				tx0 <= y0; ty0 <= x0; //swap x coordinates with y
 				tx1 <= y1; ty1 <= x1;
@@ -52,47 +53,47 @@
 				tx1 <= x1; ty1 <= y1;
 			end
 		end
-		else if (active) begin
-			if (tx0 > tx1) begin //horizontal lines from right-left
-				logic [10:0] tmpx, tmpy; //temp variables to swap endpoints so direction is left-right
-				tmpx = tx0; tmpy = ty0;
+		else if (active && !init_done) begin
+			// Ensure we draw from left to right (smaller x to larger x)
+			if (tx0 > tx1) begin
+				// Swap endpoints so direction is left-right
 				tx0 <= tx1; ty0 <= ty1;
-				tx1 <= tmpx; ty1 <= tmpy;
+				tx1 <= tx0; ty1 <= ty0;  // Fixed: was using tmpx/tmpy
 			end
-
-			tdx <= tx1 - tx0;
+			
+			tdx <= (tx0 > tx1) ? tx0 - tx1 : tx1 - tx0;  // Will be positive after potential swap
 			tdy <= (ty1 > ty0) ? ty1 - ty0 : ty0 - ty1; //absolute value of dy
 			ystep <= (ty1 > ty0) ? 1 : -1; //upward or downward
-			error <= -((tx1 - tx0)/2); 
-			nextX <= tx0;
-			nextY <= ty0;
-			active <= 0; //initialisation is done
+			error <= -((tx0 > tx1 ? tx0 - tx1 : tx1 - tx0)/2);  // Fixed: use absolute dx
+			nextX <= (tx0 > tx1) ? tx1 : tx0;  // Start from leftmost x
+			nextY <= (tx0 > tx1) ? ty1 : ty0;  // Corresponding y
+			init_done <= 1; // Mark initialization as complete
 		end
-	end
-
-	// Drawing line
-	always_ff @(posedge clk) begin
-		if (!done && !active) begin
-			if (nextX > tx1) begin //condition for when drawing line is finished
+		else if (active && init_done) begin
+			active <= 0; // Move to drawing phase
+		end
+		else if (!done && !active) begin
+			// Drawing line
+			if (nextX > (tx0 > tx1 ? tx0 : tx1)) begin //condition for when drawing line is finished
 				done <= 1;
 			end else begin
-				if (isSteep) begin //for steep lines, we swap
+				if (isSteep) begin //for steep lines, we swap back
 					x <= nextY;
 					y <= nextX;
 				end else begin
 					x <= nextX;
 					y <= nextY;
 				end
-
-				nextX <= nextX + 1; //move forward in x-axis regardless of direction
+				
+				nextX <= nextX + 1; //move forward in x-axis
+				
 				if ((error + tdy) >= 0) begin 
 					error <= error + tdy - tdx; //update error
-					nextY <= nextY + ystep; //go +1 higher in y-axis
+					nextY <= nextY + ystep; //step in y direction
 				end else begin
 					error <= error + tdy;
 				end
 			end
 		end
 	end
-
-endmodule
+endmodule // line_drawer
