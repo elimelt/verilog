@@ -38,13 +38,13 @@ module line_drawer (
 		isSteep = (absdy > absdx); //steepness is true if abs change in y > abs change in x
 	end
 	
-	always_ff @(posedge clk) begin
+	always_ff @(posedge clk) beginq
 		if (reset) begin
 			active <= 1;
 			done <= 0;
 			init_done <= 0;
 			
-			// Check for steep lines and swap coordinates if needed
+			// Check for steep lines
 			if (isSteep) begin
 				tx0 <= y0; ty0 <= x0; //swap x coordinates with y
 				tx1 <= y1; ty1 <= x1;
@@ -54,30 +54,28 @@ module line_drawer (
 			end
 		end
 		else if (active && !init_done) begin
-			// Ensure we draw from left to right (smaller x to larger x)
-			if (tx0 > tx1) begin
-				// Swap endpoints so direction is left-right
-				tx0 <= tx1; ty0 <= ty1;
-				tx1 <= tx0; ty1 <= ty0;  // Fixed: was using tmpx/tmpy
+			if (tx0 > tx1) begin //horizontal lines from right-left
+				tx0 <= tx1; ty0 <= ty1; //swap endpoints so direction is left-right
+				tx1 <= tx0; ty1 <= ty0;
 			end
 			
-			tdx <= (tx0 > tx1) ? tx0 - tx1 : tx1 - tx0;  // Will be positive after potential swap
+			tdx <= (tx0 > tx1) ? tx0 - tx1 : tx1 - tx0;
 			tdy <= (ty1 > ty0) ? ty1 - ty0 : ty0 - ty1; //absolute value of dy
 			ystep <= (ty1 > ty0) ? 1 : -1; //upward or downward
-			error <= -((tx0 > tx1 ? tx0 - tx1 : tx1 - tx0)/2);  // Fixed: use absolute dx
-			nextX <= (tx0 > tx1) ? tx1 : tx0;  // Start from leftmost x
-			nextY <= (tx0 > tx1) ? ty1 : ty0;  // Corresponding y
-			init_done <= 1; // Mark initialization as complete
+			error <= -((tx0 > tx1 ? tx0 - tx1 : tx1 - tx0)/2);
+			nextX <= (tx0 > tx1) ? tx1 : tx0;  // leftmost x
+			nextY <= (tx0 > tx1) ? ty1 : ty0;
+			init_done <= 1;
 		end
 		else if (active && init_done) begin
-			active <= 0; // Move to drawing phase
+			active <= 0; // drawing time
 		end
 		else if (!done && !active) begin
 			// Drawing line
 			if (nextX > (tx0 > tx1 ? tx0 : tx1)) begin //condition for when drawing line is finished
 				done <= 1;
 			end else begin
-				if (isSteep) begin //for steep lines, we swap back
+				if (isSteep) begin //for steep lines, we swap
 					x <= nextY;
 					y <= nextX;
 				end else begin
@@ -85,11 +83,11 @@ module line_drawer (
 					y <= nextY;
 				end
 				
-				nextX <= nextX + 1; //move forward in x-axis
+				nextX <= nextX + 1; //move forward in x-axis regardless of direction
 				
 				if ((error + tdy) >= 0) begin 
 					error <= error + tdy - tdx; //update error
-					nextY <= nextY + ystep; //step in y direction
+					nextY <= nextY + ystep; //go +1 higher in y-axis
 				end else begin
 					error <= error + tdy;
 				end
