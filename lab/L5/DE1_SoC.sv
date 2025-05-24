@@ -47,10 +47,10 @@ module DE1_SoC (
 	logic [10:0] x, y;
 	logic done, start;
 	logic [10:0] x0, y0, x1, y1;
-	assign x0 = 11'd0;
-	assign y0 = 11'd0;
-	assign x1 = 11'd639;
-	assign y1 = 11'd479;
+	assign x0 = 11'd10;
+	assign y0 = 11'd200;
+	assign x1 = 11'd10;
+	assign y1 = 11'd10;
 
 	// Pulse start signal when KEY[0] is pressed
 	always_ff @(posedge CLOCK_50) begin
