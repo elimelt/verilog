@@ -13,7 +13,7 @@ module DE1_SoC (
     localparam SCREEN_HEIGHT = 480;
     localparam CENTER_X = SCREEN_WIDTH / 2;
     localparam CENTER_Y = SCREEN_HEIGHT / 2;
-    localparam STEP_SIZE = 25;
+    localparam STEP_SIZE = 5;
     
     logic reset;
     logic [9:0] x, line_x;
@@ -34,6 +34,16 @@ module DE1_SoC (
         .is_wall(wall_pixel)
     );
 
+    // maze template for collision detection
+    logic [9:0] check_x;
+    logic [8:0] check_y;
+    logic check_wall;
+
+    maze_template maze_check (
+        .x(check_x),
+        .y(check_y),
+        .is_wall(check_wall)
+    );
 
     video_driver #(.WIDTH(640), .HEIGHT(480)) v1 (
         .CLOCK_50, .reset, .x, .y, .r, .g, .b,
@@ -73,22 +83,74 @@ module DE1_SoC (
         move_right <= right & ~prev_right;
     end
 
-    assign restart_draw = move_up | move_down | move_left | move_right;
+    // collision detection and movement
+    typedef enum logic [1:0] {
+        IDLE,
+        CHECK_COLLISION,
+        MOVE_IF_VALID
+    } move_state_t;
 
-    // Move endpoint on edge trigger
+    move_state_t move_state;
+    logic [9:0] next_x1;
+    logic [8:0] next_y1;
+    logic move_pending;
+
     always_ff @(posedge CLOCK_50) begin
         if (reset) begin
             x0 <= CENTER_X;
             y0 <= CENTER_Y + 175;
             x1 <= CENTER_X;
             y1 <= CENTER_Y + 175;
+            move_state <= IDLE;
+            move_pending <= 0;
         end else begin
-            if (move_up)    y1 <= (y1 >= STEP_SIZE) ? y1 - STEP_SIZE : 0;
-            if (move_down)  y1 <= (y1 <= SCREEN_HEIGHT - STEP_SIZE - 1) ? y1 + STEP_SIZE : SCREEN_HEIGHT - 1;
-            if (move_left)  x1 <= (x1 >= STEP_SIZE) ? x1 - STEP_SIZE : 0;
-            if (move_right) x1 <= (x1 <= SCREEN_WIDTH - STEP_SIZE - 1) ? x1 + STEP_SIZE : SCREEN_WIDTH - 1;
+            case (move_state)
+                IDLE: begin
+                    if (move_up || move_down || move_left || move_right) begin
+                        // destination coordinates
+                        next_x1 <= x1;
+                        next_y1 <= y1;
+
+                        if (move_up) begin
+                            next_x1 <= x1;
+                            next_y1 <= (y1 >= STEP_SIZE) ? y1 - STEP_SIZE : 0;
+                        end else if (move_down) begin
+                            next_x1 <= x1;
+                            next_y1 <= (y1 <= SCREEN_HEIGHT - STEP_SIZE - 1) ? y1 + STEP_SIZE : SCREEN_HEIGHT - 1;
+                        end else if (move_left) begin
+                            next_x1 <= (x1 >= STEP_SIZE) ? x1 - STEP_SIZE : 0;
+                            next_y1 <= y1;
+                        end else if (move_right) begin
+                            next_x1 <= (x1 <= SCREEN_WIDTH - STEP_SIZE - 1) ? x1 + STEP_SIZE : SCREEN_WIDTH - 1;
+                            next_y1 <= y1;
+                        end
+
+                        move_state <= CHECK_COLLISION;
+                        move_pending <= 1;
+                    end
+                end
+
+                CHECK_COLLISION: begin
+                    // load coordinates for collision check
+                    check_x <= next_x1;
+                    check_y <= next_y1;
+                    move_state <= MOVE_IF_VALID;
+                end
+
+                MOVE_IF_VALID: begin
+                    // move if not a wall
+                    if (!check_wall) begin
+                        x1 <= next_x1;
+                        y1 <= next_y1;
+                    end
+                    move_state <= IDLE;
+                    move_pending <= 0;
+                end
+            endcase
         end
     end
+
+    assign restart_draw = (move_state == MOVE_IF_VALID) && !check_wall;
 
     line_drawer drawer (
         .clk(CLOCK_50),
@@ -116,8 +178,7 @@ module DE1_SoC (
         line_y_buf <= line_y;
     end
     assign LEDR[3:0] = {move_right, move_left, move_down, move_up};
-    assign LEDR[7:4] = {right, left, down, up};
-
+    assign LEDR[8:4] = {right, left, down, up, check_wall};
 
     /// Pixel coloring
     always_ff @(posedge CLOCK_50) begin
@@ -143,6 +204,5 @@ module DE1_SoC (
             end
         end
     end
-
 
 endmodule
