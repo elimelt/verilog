@@ -67,8 +67,8 @@ module DE1_SoC (
         prev_left  <= left;
         prev_right <= right;
 
-        move_up    <= up    & ~prev_up;
-        move_down  <= down  & ~prev_down;
+        move_up    <= up    & ~prev_up  ;
+        move_down  <= down  & ~prev_down ;
         move_left  <= left  & ~prev_left;
         move_right <= right & ~prev_right;
     end
@@ -115,6 +115,8 @@ module DE1_SoC (
         line_x_buf <= line_x;
         line_y_buf <= line_y;
     end
+    assign LEDR[3:0] = {move_right, move_left, move_down, move_up};
+    assign LEDR[7:4] = {right, left, down, up};
 
 
     /// Pixel coloring
